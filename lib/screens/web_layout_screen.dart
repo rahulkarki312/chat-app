@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import '../colors.dart';
-import '../info.dart';
 import '../widgets/chat_list.dart';
 import '../widgets/web_chat_appbar.dart';
 import '../widgets/contacts_list.dart';
-import '../widgets/my_message_card.dart';
-import '../widgets/sender_message_card.dart';
 import '../widgets/web_profile_bar.dart';
 import '../widgets/web_search_bar.dart';
 
@@ -18,10 +15,10 @@ class WebLayoutScreen extends StatelessWidget {
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
+          const Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: const [
+                children: [
                   WebProfileBar(),
                   WebSearchBar(),
                   ContactsList(),

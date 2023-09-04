@@ -4,9 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'colors.dart';
 import 'router.dart';
-import '../screens/mobile_layout_screen.dart';
-import '../screens/web_layout_screen.dart';
-import '../utils/responsive_layout.dart';
 
 //  Tutorial Bookmark 12:00 LoginSCreen
 
@@ -30,6 +27,6 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: backgroundColor,
             appBarTheme: const AppBarTheme(color: appBarColor)),
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: LandingScreen());
+        home: const LandingScreen());
   }
 }

@@ -4,6 +4,8 @@ import 'package:chat_app/features/auth/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class LandingScreen extends StatelessWidget {
+  const LandingScreen({super.key});
+
   void navigateToLoginScreen(BuildContext context) {
     Navigator.pushNamed(context, LoginScreen.routeName);
   }
