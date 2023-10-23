@@ -110,6 +110,6 @@ class AuthRepository {
         .doc(userId)
         .snapshots()
         .map((event) => UserModel.fromMap(event.data()!));
-    // ultimately returns userdata
+    // ultimately returns userdata with the given userId
   }
 }
