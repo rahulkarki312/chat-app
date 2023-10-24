@@ -1,5 +1,4 @@
 import 'package:chat_app/common/enums/message_enum.dart';
-import 'package:flutter/material.dart';
 
 class Message {
   final String senderId;
@@ -37,7 +36,7 @@ class Message {
         receiverId: map['receiverId'] ?? '',
         text: map['text'] ?? '',
         type: (map['type'] as String).toEnum(),
-        timeSent: DateTime.fromMicrosecondsSinceEpoch(map['timesent']),
+        timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
         messageId: map['messageId'],
         isSeen: map['isSeen'] ?? false);
   }

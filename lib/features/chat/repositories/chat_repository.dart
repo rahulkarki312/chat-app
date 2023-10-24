@@ -1,4 +1,5 @@
 import 'package:chat_app/common/enums/message_enum.dart';
+import 'package:chat_app/common/repository/common_firebase_storage_repository.dart';
 import 'package:chat_app/common/utils/utils.dart';
 import 'package:chat_app/models/chat_contact.dart';
 import 'package:chat_app/models/message.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:io';
 
 final ChatRepositoryProvider = Provider((ref) => ChatRepository(
     firestore: FirebaseFirestore.instance, auth: FirebaseAuth.instance));
@@ -18,6 +20,7 @@ class ChatRepository {
 
   ChatRepository({required this.firestore, required this.auth});
 
+  // fetching chatContacts using stream
   Stream<List<ChatContact>> getChatContacts() {
     return firestore
         .collection('users')
@@ -44,6 +47,26 @@ class ChatRepository {
             lastMessage: chatContact.lastMessage));
       }
       return contacts;
+    });
+  }
+
+  // fetching chatMessages using stream
+
+  Stream<List<Message>> getChatStream(String receiverUserId) {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .doc(receiverUserId)
+        .collection('messages')
+        .orderBy('timeSent')
+        .snapshots()
+        .map((event) {
+      List<Message> messages = [];
+      for (var document in event.docs) {
+        messages.add(Message.fromMap(document.data()));
+      }
+      return messages;
     });
   }
 
@@ -145,6 +168,57 @@ class ChatRepository {
           messageType: MessageEnum.text,
           receiverUsername: receiverUserData.name,
           username: senderUser.name);
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void sendFileMessage(
+      {required BuildContext context,
+      required File file,
+      required String receiverUserId,
+      required UserModel senderUserData,
+      required ProviderRef ref,
+      required MessageEnum messageEnum}) async {
+    try {
+      var timeSent = DateTime.now();
+      var messageId = const Uuid().v1();
+
+      String fileUrl = await ref
+          .read(CommonFirebaseStorageRepositoryProvider)
+          .storeFileToFirebase(
+              'chat/${messageEnum.type}/${senderUserData.uid}/$receiverUserId/$messageId',
+              file);
+
+      var userDataMap =
+          await firestore.collection('users').doc(receiverUserId).get();
+      UserModel receiverUserData = UserModel.fromMap(userDataMap.data()!);
+      String sender = auth.currentUser!.uid == senderUserData.uid
+          ? "you"
+          : senderUserData.name;
+      String contactMsg;
+      switch (messageEnum) {
+        case MessageEnum.image:
+          contactMsg = "Image 🖼️";
+        case MessageEnum.video:
+          contactMsg = "video 📽️";
+        case MessageEnum.audio:
+          contactMsg = "audio 🔉";
+        case MessageEnum.gif:
+          contactMsg = "gif⚡";
+        default:
+          contactMsg = "";
+      }
+      _saveDataToContactsSubcollection(senderUserData, receiverUserData,
+          contactMsg, timeSent, receiverUserId);
+      _saveMessageToMessageSubcollection(
+          receiverUserId: receiverUserId,
+          text: fileUrl,
+          timeSent: timeSent,
+          username: senderUserData.name,
+          messageId: messageId,
+          receiverUsername: receiverUserData.name,
+          messageType: messageEnum);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

@@ -4,9 +4,9 @@ import 'package:chat_app/models/chat_contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../colors.dart';
-import '../info.dart';
-import '../features/chat/screens/mobile_chat_screen.dart';
+import '../../../colors.dart';
+import '../../../info.dart';
+import '../screens/mobile_chat_screen.dart';
 
 class ContactsList extends ConsumerWidget {
   const ContactsList({Key? key}) : super(key: key);
@@ -21,7 +21,6 @@ class ContactsList extends ConsumerWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();
           }
-          // print(snapshot.data); -> null
           return ListView.builder(
             shrinkWrap: true,
             itemCount: snapshot.data!.length,

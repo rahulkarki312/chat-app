@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:chat_app/common/enums/message_enum.dart';
 import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import 'package:chat_app/features/chat/repositories/chat_repository.dart';
 import 'package:chat_app/models/chat_contact.dart';
+import 'package:chat_app/models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,6 +23,10 @@ class ChatController {
     return chatRepository.getChatContacts();
   }
 
+  Stream<List<Message>> chatStream(String receiverUserId) {
+    return chatRepository.getChatStream(receiverUserId);
+  }
+
   void sendTextMessage(
       BuildContext context, String text, String receiverUserId) {
     ref.read(userDataAuthProvider).whenData((value) =>
@@ -27,6 +35,19 @@ class ChatController {
             text: text,
             receiverUserId: receiverUserId,
             senderUser: value!));
+    // print("send completed");
+  }
+
+  void sendFileMessage(BuildContext context, File file, String receiverUserId,
+      MessageEnum messageEnum) {
+    ref.read(userDataAuthProvider).whenData((value) =>
+        chatRepository.sendFileMessage(
+            context: context,
+            file: file,
+            receiverUserId: receiverUserId,
+            senderUserData: value!,
+            messageEnum: messageEnum,
+            ref: ref));
     // print("send completed");
   }
 }

@@ -5,7 +5,7 @@ import 'package:chat_app/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../colors.dart';
-import '../../../widgets/chat_list.dart';
+import '../widgets/chat_list.dart';
 
 class MobileChatScreen extends ConsumerWidget {
   static const routeName = '/mobile-chat-screen';
@@ -57,8 +57,8 @@ class MobileChatScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          const Expanded(
-            child: ChatList(),
+          Expanded(
+            child: ChatList(receiverUserId: uid),
           ),
           BottomChatField(
             receiverUserId: uid,
