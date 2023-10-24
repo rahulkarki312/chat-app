@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/common/enums/message_enum.dart';
+import 'package:chat_app/features/chat/widgets/video_player_item.dart';
 import 'package:flutter/material.dart';
 
 class DisplayTextImageGIF extends StatelessWidget {
@@ -16,10 +17,14 @@ class DisplayTextImageGIF extends StatelessWidget {
             message,
             style: const TextStyle(fontSize: 16),
           )
-        : CachedNetworkImage(
-            imageUrl: message,
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-          );
+        : type == MessageEnum.video
+            ? VideoPlayerItem(
+                videoUrl: message,
+              )
+            : CachedNetworkImage(
+                imageUrl: message,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              );
   }
 }

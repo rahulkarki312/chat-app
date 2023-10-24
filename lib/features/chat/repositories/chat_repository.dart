@@ -192,10 +192,9 @@ class ChatRepository {
 
       var userDataMap =
           await firestore.collection('users').doc(receiverUserId).get();
+
       UserModel receiverUserData = UserModel.fromMap(userDataMap.data()!);
-      String sender = auth.currentUser!.uid == senderUserData.uid
-          ? "you"
-          : senderUserData.name;
+
       String contactMsg;
       switch (messageEnum) {
         case MessageEnum.image:
@@ -209,9 +208,9 @@ class ChatRepository {
         default:
           contactMsg = "";
       }
-      _saveDataToContactsSubcollection(senderUserData, receiverUserData,
+      await _saveDataToContactsSubcollection(senderUserData, receiverUserData,
           contactMsg, timeSent, receiverUserId);
-      _saveMessageToMessageSubcollection(
+      await _saveMessageToMessageSubcollection(
           receiverUserId: receiverUserId,
           text: fileUrl,
           timeSent: timeSent,

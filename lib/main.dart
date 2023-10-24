@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'colors.dart';
 import 'router.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 //  Tutorial Bookmark 130: 19:00
 
@@ -18,6 +19,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseAppCheck.instance.activate(
+    appleProvider: AppleProvider.debug,
+    androidProvider: AndroidProvider.debug,
   );
   runApp(
     const ProviderScope(
