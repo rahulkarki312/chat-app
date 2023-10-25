@@ -1,3 +1,5 @@
+import 'package:chat_app/common/enums/message_enum.dart';
+import 'package:chat_app/common/providers/message_reply_provider.dart';
 import 'package:chat_app/common/widgets/loader.dart';
 import 'package:chat_app/features/chat/controller/chat_controller.dart';
 import 'package:chat_app/features/chat/widgets/my_message_card.dart';
@@ -25,6 +27,12 @@ class _ChatListState extends ConsumerState<ChatList> {
   void dispose() {
     super.dispose();
     messageController.dispose();
+  }
+
+  void onMessageSwipe(String message, bool isMe, MessageEnum messageEnum) {
+    ref
+        .read(messageReplyProvider.notifier)
+        .update((state) => MessageReply(message, isMe, messageEnum));
   }
 
   @override
@@ -55,12 +63,22 @@ class _ChatListState extends ConsumerState<ChatList> {
                   message: messageData.text.toString(),
                   date: timeSent,
                   type: messageData.type,
+                  repliedText: messageData.repliedMessage,
+                  username: messageData.repliedTo,
+                  repliedMessageType: messageData.repliedMessageType,
+                  onLeftSwipe: () =>
+                      onMessageSwipe(messageData.text, true, messageData.type),
                 );
               }
               return SenderMessageCard(
                 message: messageData.text,
                 date: timeSent,
                 type: messageData.type,
+                repliedText: messageData.repliedMessage,
+                username: messageData.repliedTo,
+                repliedMessageType: messageData.repliedMessageType,
+                onRightSwipe: () =>
+                    onMessageSwipe(messageData.text, false, messageData.type),
               );
             },
           );

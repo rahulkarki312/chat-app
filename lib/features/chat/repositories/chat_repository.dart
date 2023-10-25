@@ -1,4 +1,5 @@
 import 'package:chat_app/common/enums/message_enum.dart';
+import 'package:chat_app/common/providers/message_reply_provider.dart';
 import 'package:chat_app/common/repository/common_firebase_storage_repository.dart';
 import 'package:chat_app/common/utils/utils.dart';
 import 'package:chat_app/models/chat_contact.dart';
@@ -117,6 +118,9 @@ class ChatRepository {
     required String messageId,
     required receiverUsername,
     required MessageEnum messageType,
+    required MessageReply? messageReply,
+    required String senderUserName,
+    required String receiverUserName,
   }) async {
     final message = Message(
         senderId: auth.currentUser!.uid,
@@ -125,7 +129,15 @@ class ChatRepository {
         type: messageType,
         timeSent: timeSent,
         messageId: messageId,
-        isSeen: false);
+        isSeen: false,
+        repliedMessage: messageReply == null ? '' : messageReply.message,
+        repliedTo: messageReply == null
+            ? ''
+            : messageReply.isMe
+                ? senderUserName
+                : receiverUserName,
+        repliedMessageType:
+            messageReply == null ? MessageEnum.text : messageReply.messageEnum);
     await firestore
         .collection('users')
         .doc(auth.currentUser!.uid)
@@ -148,7 +160,8 @@ class ChatRepository {
       {required BuildContext context,
       required String text,
       required String receiverUserId,
-      required UserModel senderUser}) async {
+      required UserModel senderUser,
+      required MessageReply? messageReply}) async {
     try {
       var timeSent = DateTime.now();
       UserModel receiverUserData;
@@ -161,25 +174,31 @@ class ChatRepository {
       await _saveDataToContactsSubcollection(
           senderUser, receiverUserData, text, timeSent, receiverUserId);
       await _saveMessageToMessageSubcollection(
-          receiverUserId: receiverUserId,
-          text: text,
-          timeSent: timeSent,
-          messageId: messageId,
-          messageType: MessageEnum.text,
-          receiverUsername: receiverUserData.name,
-          username: senderUser.name);
+        receiverUserId: receiverUserId,
+        text: text,
+        timeSent: timeSent,
+        messageId: messageId,
+        messageType: MessageEnum.text,
+        receiverUsername: receiverUserData.name,
+        username: senderUser.name,
+        messageReply: messageReply,
+        receiverUserName: receiverUserData.name,
+        senderUserName: senderUser.name,
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
   }
 
-  void sendFileMessage(
-      {required BuildContext context,
-      required File file,
-      required String receiverUserId,
-      required UserModel senderUserData,
-      required ProviderRef ref,
-      required MessageEnum messageEnum}) async {
+  void sendFileMessage({
+    required BuildContext context,
+    required File file,
+    required String receiverUserId,
+    required UserModel senderUserData,
+    required ProviderRef ref,
+    required MessageEnum messageEnum,
+    required MessageReply? messageReply,
+  }) async {
     try {
       var timeSent = DateTime.now();
       var messageId = const Uuid().v1();
@@ -211,13 +230,17 @@ class ChatRepository {
       await _saveDataToContactsSubcollection(senderUserData, receiverUserData,
           contactMsg, timeSent, receiverUserId);
       await _saveMessageToMessageSubcollection(
-          receiverUserId: receiverUserId,
-          text: fileUrl,
-          timeSent: timeSent,
-          username: senderUserData.name,
-          messageId: messageId,
-          receiverUsername: receiverUserData.name,
-          messageType: messageEnum);
+        receiverUserId: receiverUserId,
+        text: fileUrl,
+        timeSent: timeSent,
+        username: senderUserData.name,
+        messageId: messageId,
+        receiverUsername: receiverUserData.name,
+        messageType: messageEnum,
+        messageReply: messageReply,
+        receiverUserName: receiverUserData.name,
+        senderUserName: senderUserData.name,
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -227,7 +250,8 @@ class ChatRepository {
       {required BuildContext context,
       required String gifUrl,
       required String receiverUserId,
-      required UserModel senderUser}) async {
+      required UserModel senderUser,
+      required MessageReply? messageReply}) async {
     try {
       var timeSent = DateTime.now();
       UserModel receiverUserData;
@@ -240,13 +264,17 @@ class ChatRepository {
       await _saveDataToContactsSubcollection(
           senderUser, receiverUserData, 'GIF', timeSent, receiverUserId);
       await _saveMessageToMessageSubcollection(
-          receiverUserId: receiverUserId,
-          text: gifUrl,
-          timeSent: timeSent,
-          messageId: messageId,
-          messageType: MessageEnum.gif,
-          receiverUsername: receiverUserData.name,
-          username: senderUser.name);
+        receiverUserId: receiverUserId,
+        text: gifUrl,
+        timeSent: timeSent,
+        messageId: messageId,
+        messageType: MessageEnum.gif,
+        receiverUsername: receiverUserData.name,
+        username: senderUser.name,
+        messageReply: messageReply,
+        receiverUserName: receiverUserData.name,
+        senderUserName: senderUser.name,
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

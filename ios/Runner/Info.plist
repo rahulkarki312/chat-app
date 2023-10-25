@@ -55,6 +55,8 @@
 	<string>For Mic</string>
     <key>NSContactsUsageDescription</key>
     <string>To access the contact list</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>For recording purposes</string>
 
 </dict>
 </plist>
