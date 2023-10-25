@@ -57,6 +57,13 @@ class _ChatListState extends ConsumerState<ChatList> {
             itemBuilder: (context, index) {
               final messageData = snapshot.data![index];
               final timeSent = DateFormat.Hm().format(messageData.timeSent);
+              // to set the isSeen of a message (When this ListView is created, and the receiver for whom it is sent has opened it, the messages displayed must be marked seen )
+              if (!messageData.isSeen &&
+                  messageData.receiverId ==
+                      FirebaseAuth.instance.currentUser!.uid) {
+                ref.read(ChatControllerProvider).setChatMessageSeen(
+                    context, widget.receiverUserId, messageData.messageId);
+              }
               if (messageData.senderId ==
                   FirebaseAuth.instance.currentUser!.uid) {
                 return MyMessageCard(
@@ -68,6 +75,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                   repliedMessageType: messageData.repliedMessageType,
                   onLeftSwipe: () =>
                       onMessageSwipe(messageData.text, true, messageData.type),
+                  isSeen: messageData.isSeen,
                 );
               }
               return SenderMessageCard(
