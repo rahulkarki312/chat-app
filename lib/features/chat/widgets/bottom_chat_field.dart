@@ -53,6 +53,15 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     }
   }
 
+  void selectGif() async {
+    final gif = await pickGIF(context);
+    if (gif != null && context.mounted) {
+      ref
+          .read(ChatControllerProvider)
+          .sendGIFMessage(context, gif.url, widget.receiverUserId);
+    }
+  }
+
   void hideEmojiContainer() => setState(() {
         isShowEmojiContainer = false;
       });
@@ -119,7 +128,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: selectGif,
                             icon: const Icon(
                               Icons.gif,
                               color: Colors.grey,
@@ -185,8 +194,15 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 height: 300,
                 child: EmojiPicker(
                   onEmojiSelected: (category, emoji) {
-                    _messageController.text =
-                        _messageController.text + emoji.emoji;
+                    setState(() {
+                      _messageController.text =
+                          _messageController.text + emoji.emoji;
+                    });
+                    if (!isShowSendButton) {
+                      setState(() {
+                        isShowSendButton = true;
+                      });
+                    }
                   },
                 ),
               )

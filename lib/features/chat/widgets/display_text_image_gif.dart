@@ -21,10 +21,20 @@ class DisplayTextImageGIF extends StatelessWidget {
             ? VideoPlayerItem(
                 videoUrl: message,
               )
-            : CachedNetworkImage(
-                imageUrl: message,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              );
+            : type == MessageEnum.gif
+                ? CachedNetworkImage(
+                    imageUrl: message,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: message,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  );
   }
 }
