@@ -111,7 +111,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
         isShowEmojiContainer = true;
       });
 
-  void showKeyboard() => focusNode.requestFocus();
+  void showKeyboard() {
+    focusNode.requestFocus();
+  }
 
   void hideKeyboard() => focusNode.unfocus();
 
@@ -139,11 +141,14 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     final isShowMessageReply = messageReply != null;
     return Column(
       children: [
-        isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
+        isShowMessageReply
+            ? MessageReplyPreview(receiverUserId: widget.receiverUserId)
+            : const SizedBox(),
         Row(
           children: [
             Expanded(
               child: TextFormField(
+                onTap: hideEmojiContainer,
                 focusNode: focusNode,
                 controller: _messageController,
                 onChanged: (value) {
