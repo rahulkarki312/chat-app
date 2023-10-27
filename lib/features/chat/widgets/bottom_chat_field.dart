@@ -15,8 +15,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String receiverUserId;
+  final bool isGroupChat;
 
-  BottomChatField({required this.receiverUserId});
+  BottomChatField({required this.receiverUserId, required this.isGroupChat});
 
   @override
   ConsumerState<BottomChatField> createState() => _BottomChatFieldState();
@@ -50,7 +51,10 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void sendTextMessage() async {
     if (isShowSendButton) {
       ref.read(ChatControllerProvider).sendTextMessage(
-          context, _messageController.text.trim(), widget.receiverUserId);
+          context,
+          _messageController.text.trim(),
+          widget.receiverUserId,
+          widget.isGroupChat);
       setState(() {
         _messageController.text = '';
       });
@@ -75,9 +79,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   }
 
   void sendFileMessage(File file, MessageEnum messageEnum) {
-    ref
-        .read(ChatControllerProvider)
-        .sendFileMessage(context, file, widget.receiverUserId, messageEnum);
+    ref.read(ChatControllerProvider).sendFileMessage(
+        context, file, widget.receiverUserId, messageEnum, widget.isGroupChat);
   }
 
   void selectImage() async {
@@ -97,9 +100,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void selectGif() async {
     final gif = await pickGIF(context);
     if (gif != null && context.mounted) {
-      ref
-          .read(ChatControllerProvider)
-          .sendGIFMessage(context, gif.url, widget.receiverUserId);
+      ref.read(ChatControllerProvider).sendGIFMessage(
+          context, gif.url, widget.receiverUserId, widget.isGroupChat);
     }
   }
 

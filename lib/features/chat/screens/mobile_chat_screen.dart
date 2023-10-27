@@ -11,8 +11,10 @@ class MobileChatScreen extends ConsumerWidget {
   static const routeName = '/mobile-chat-screen';
   final String name;
   final String uid;
+  final bool isGroupChat;
 
-  const MobileChatScreen({required this.name, required this.uid});
+  const MobileChatScreen(
+      {required this.name, required this.uid, required this.isGroupChat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,25 +22,27 @@ class MobileChatScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: appBarColor,
         // StreamBuilder is used here since we need to continously check if the selected user is onilne (here using authRepositoryProvider)
-        title: StreamBuilder<UserModel>(
-          stream: ref.read(authControllerProvider).userDataById(uid),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Loader();
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name),
-                Text(
-                  snapshot.data!.isOnline ? 'online' : 'offline',
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.normal),
-                )
-              ],
-            );
-          },
-        ),
+        title: isGroupChat
+            ? Text(name)
+            : StreamBuilder<UserModel>(
+                stream: ref.read(authControllerProvider).userDataById(uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loader();
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name),
+                      Text(
+                        snapshot.data!.isOnline ? 'online' : 'offline',
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.normal),
+                      )
+                    ],
+                  );
+                },
+              ),
         centerTitle: false,
         actions: [
           IconButton(
@@ -58,11 +62,9 @@ class MobileChatScreen extends ConsumerWidget {
       body: Column(
         children: [
           Expanded(
-            child: ChatList(receiverUserId: uid),
+            child: ChatList(receiverUserId: uid, isGroupChat: isGroupChat),
           ),
-          BottomChatField(
-            receiverUserId: uid,
-          ),
+          BottomChatField(receiverUserId: uid, isGroupChat: isGroupChat),
         ],
       ),
     );

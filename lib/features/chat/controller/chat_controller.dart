@@ -7,7 +7,9 @@ import 'package:chat_app/features/chat/repositories/chat_repository.dart';
 import 'package:chat_app/models/chat_contact.dart';
 import 'package:chat_app/models/message.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../models/group.dart' as model;
 
 final ChatControllerProvider = Provider((ref) {
   final chatRepository = ref.watch(ChatRepositoryProvider);
@@ -28,24 +30,31 @@ class ChatController {
     return chatRepository.getChatStream(receiverUserId);
   }
 
-  void sendTextMessage(
-      BuildContext context, String text, String receiverUserId) {
+  Stream<List<model.Group>> chatGroups() {
+    return chatRepository.getChatGroup();
+  }
+
+  Stream<List<Message>> groupChatStream(String groupId) {
+    return chatRepository.getGroupChatStream(groupId);
+  }
+
+  void sendTextMessage(BuildContext context, String text, String receiverUserId,
+      bool isGroupChat) {
     final messageReply = ref.read(messageReplyProvider);
-    ref
-        .read(userDataAuthProvider)
-        .whenData((value) => chatRepository.sendTextMessage(
-              context: context,
-              text: text,
-              receiverUserId: receiverUserId,
-              senderUser: value!,
-              messageReply: messageReply,
-            ));
+    ref.read(userDataAuthProvider).whenData((value) =>
+        chatRepository.sendTextMessage(
+            context: context,
+            text: text,
+            receiverUserId: receiverUserId,
+            senderUser: value!,
+            messageReply: messageReply,
+            isGroupChat: isGroupChat));
     ref.read(messageReplyProvider.notifier).update((state) => null);
     // print("send completed");
   }
 
   void sendFileMessage(BuildContext context, File file, String receiverUserId,
-      MessageEnum messageEnum) {
+      MessageEnum messageEnum, bool isGroupChat) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData((value) =>
         chatRepository.sendFileMessage(
@@ -55,24 +64,28 @@ class ChatController {
             senderUserData: value!,
             messageEnum: messageEnum,
             ref: ref,
-            messageReply: messageReply));
+            messageReply: messageReply,
+            isGroupChat: isGroupChat));
     ref.read(messageReplyProvider.notifier).update((state) => null);
     // print("send completed");
   }
 
-  void sendGIFMessage(
-      BuildContext context, String gifUrl, String receiverUserId) {
+  void sendGIFMessage(BuildContext context, String gifUrl,
+      String receiverUserId, bool isGroupChat) {
     int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
     String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
     String newGifUrl = 'https://i.giphy.com/media/$gifUrlPart/200.gif';
     final messageReply = ref.read(messageReplyProvider);
-    ref.read(userDataAuthProvider).whenData((value) =>
-        chatRepository.sendGIFMessage(
-            context: context,
-            gifUrl: newGifUrl,
-            receiverUserId: receiverUserId,
-            senderUser: value!,
-            messageReply: messageReply));
+    ref
+        .read(userDataAuthProvider)
+        .whenData((value) => chatRepository.sendGIFMessage(
+              context: context,
+              gifUrl: newGifUrl,
+              receiverUserId: receiverUserId,
+              senderUser: value!,
+              messageReply: messageReply,
+              isGroupChat: isGroupChat,
+            ));
     ref.read(messageReplyProvider.notifier).update((state) => null);
   }
 
