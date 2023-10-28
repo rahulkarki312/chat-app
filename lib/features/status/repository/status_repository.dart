@@ -87,7 +87,7 @@ class StatusRepository {
             username: username,
             phoneNumber: phoneNumber,
             photoUrl: statusImageUrls,
-            createdAt: DateTime.now(),
+            validUntil: DateTime.now().add(const Duration(hours: 24)),
             profilePic: profilePic,
             statusId: statusId,
             whoCanSee: uidWhoCanSee);
@@ -115,10 +115,8 @@ class StatusRepository {
                     .phones[0]
                     .number
                     .replaceAll(RegExp('[-, ]'), ''))
-            .where('createdAt',
-                isGreaterThan: DateTime.now()
-                    .subtract(const Duration(hours: 24))
-                    .millisecondsSinceEpoch)
+            .where('validUntil',
+                isGreaterThan: DateTime.now().millisecondsSinceEpoch)
             .get();
         for (var tempData in statusesSnapshot.docs) {
           Status tempStatus = Status.fromMap(tempData.data());

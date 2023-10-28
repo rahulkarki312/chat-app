@@ -95,6 +95,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                 repliedMessageType: messageData.repliedMessageType,
                 onRightSwipe: () =>
                     onMessageSwipe(messageData.text, false, messageData.type),
+                isGroupChat: widget.isGroupChat,
               );
             },
           );

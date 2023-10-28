@@ -12,6 +12,7 @@ class SenderMessageCard extends StatelessWidget {
   final String repliedText;
   final String username;
   final MessageEnum repliedMessageType;
+  final bool isGroupChat;
 
   const SenderMessageCard(
       {super.key,
@@ -21,7 +22,8 @@ class SenderMessageCard extends StatelessWidget {
       required this.onRightSwipe,
       required this.repliedText,
       required this.username,
-      required this.repliedMessageType});
+      required this.repliedMessageType,
+      this.isGroupChat = false});
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,7 @@ class SenderMessageCard extends StatelessWidget {
                             top: 5, left: 5, right: 5, bottom: 25),
                     child: Column(
                       children: [
+                        // if the message was replied to
                         if (isReplying) ...[
                           Text(
                             username,

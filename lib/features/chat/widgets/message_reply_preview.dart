@@ -7,7 +7,9 @@ import '../../../models/user_model.dart';
 
 class MessageReplyPreview extends ConsumerWidget {
   final String receiverUserId;
-  const MessageReplyPreview({super.key, required this.receiverUserId});
+  final bool isGroupChat;
+  const MessageReplyPreview(
+      {super.key, required this.receiverUserId, this.isGroupChat = false});
 
   void cancelReply(WidgetRef ref) {
     ref.read(messageReplyProvider.notifier).update((state) => null);
@@ -43,7 +45,11 @@ class MessageReplyPreview extends ConsumerWidget {
                       return snapshot.connectionState == ConnectionState.waiting
                           ? const Text('')
                           : Text(
-                              messageReply!.isMe ? 'Me' : snapshot.data!,
+                              messageReply!.isMe
+                                  ? 'Me'
+                                  : isGroupChat
+                                      ? ''
+                                      : snapshot.data!,
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             );

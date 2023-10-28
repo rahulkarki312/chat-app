@@ -3,7 +3,7 @@ class Status {
   final String username;
   final String phoneNumber;
   final List<String> photoUrl;
-  final DateTime createdAt;
+  final DateTime validUntil;
   final String profilePic;
   final String statusId;
   final List<String> whoCanSee;
@@ -13,7 +13,7 @@ class Status {
       required this.username,
       required this.phoneNumber,
       required this.photoUrl,
-      required this.createdAt,
+      required this.validUntil,
       required this.profilePic,
       required this.statusId,
       required this.whoCanSee});
@@ -24,7 +24,7 @@ class Status {
       'username': username,
       'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
-      'createdAt': createdAt.microsecondsSinceEpoch,
+      'validUntil': validUntil.microsecondsSinceEpoch,
       'profilePic': profilePic,
       'statusId': statusId,
       'whoCanSee': whoCanSee,
@@ -37,7 +37,7 @@ class Status {
         username: map['username'] ?? '',
         photoUrl: List<String>.from(map['photoUrl']),
         phoneNumber: map['phoneNumber'] ?? '',
-        createdAt: DateTime.fromMicrosecondsSinceEpoch(map['createdAt']),
+        validUntil: DateTime.fromMicrosecondsSinceEpoch(map['validUntil']),
         profilePic: map['profilePic'] ?? '',
         statusId: map['statusId'] ?? '',
         whoCanSee: List<String>.from(map['whoCanSee']));

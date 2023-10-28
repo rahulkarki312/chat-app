@@ -141,8 +141,8 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
             }
           },
           backgroundColor: tabColor,
-          child: const Icon(
-            Icons.comment,
+          child: Icon(
+            tabBarController.index == 0 ? Icons.comment : Icons.add_a_photo,
             color: Colors.white,
           ),
         ),

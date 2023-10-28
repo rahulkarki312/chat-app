@@ -144,7 +144,10 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     return Column(
       children: [
         isShowMessageReply
-            ? MessageReplyPreview(receiverUserId: widget.receiverUserId)
+            ? MessageReplyPreview(
+                receiverUserId: widget.receiverUserId,
+                isGroupChat: widget.isGroupChat,
+              )
             : const SizedBox(),
         Row(
           children: [
