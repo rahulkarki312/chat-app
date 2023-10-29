@@ -11,7 +11,8 @@ import 'colors.dart';
 import 'router.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
-//  Tutorial Bookmark 130: 19:00
+//  Tutorial Bookmark 150: 27:00
+// I have already saved the appId and certificate changes in main.go
 
 // test number 9765562134
 
