@@ -1,6 +1,7 @@
 import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import 'package:chat_app/features/call/repository/call_repository.dart';
 import 'package:chat_app/models/call.dart';
+import 'package:chat_app/models/call_history.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -61,5 +62,9 @@ class CallController {
     } else {
       callRepository.endCall(callerId, receiverId, context);
     }
+  }
+
+  Future<List<CallHistory>> get getCallHistory {
+    return callRepository.callHistory;
   }
 }

@@ -3,6 +3,7 @@ import 'package:chat_app/common/widgets/loader.dart';
 import 'package:chat_app/config/agora_config.dart';
 import 'package:chat_app/features/call/controller/call_controller.dart';
 import 'package:chat_app/models/call.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -47,9 +48,15 @@ class _CallScreenState extends ConsumerState<CallScreen> {
           : SafeArea(
               child: Stack(
               children: [
-                AgoraVideoViewer(client: client!),
+                AgoraVideoViewer(
+                  client: client!,
+                  disabledVideoWidget: const Center(
+                      child: Text('The video has been turned off')),
+                ),
                 AgoraVideoButtons(
                   client: client!,
+
+                  // end call button
                   disconnectButtonChild: IconButton(
                     onPressed: () async {
                       await client!.engine.leaveChannel();
@@ -68,5 +75,42 @@ class _CallScreenState extends ConsumerState<CallScreen> {
               ],
             )),
     );
+    // return StreamBuilder<DocumentSnapshot>(
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasData && snapshot.data!.data() != null) {
+    //       return Scaffold(
+    //         body: client == null
+    //             ? const Loader()
+    //             : SafeArea(
+    //                 child: Stack(
+    //                 children: [
+    //                   AgoraVideoViewer(client: client!),
+    //                   AgoraVideoButtons(
+    //                     client: client!,
+    //                     // end call button
+    //                     disconnectButtonChild: IconButton(
+    //                       onPressed: () async {
+    //                         await client!.engine.leaveChannel();
+    //                         if (context.mounted) {
+    //                           ref.read(callControllerProvider).endCall(
+    //                               widget.call.callerId,
+    //                               widget.call.receiverId,
+    //                               context,
+    //                               widget.isGroupChat);
+    //                           Navigator.pop(context);
+    //                         }
+    //                       },
+    //                       icon: const Icon(Icons.call_end),
+    //                     ),
+    //                   )
+    //                 ],
+    //               )),
+    //       );
+    //     } else {
+    //       Navigator.of(context).pop();
+    //       return const Loader();
+    //     }
+    //   },
+    // );
   }
 }

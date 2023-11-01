@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_app/common/utils/utils.dart';
 import 'package:chat_app/features/auth/controller/auth_controller.dart';
+import 'package:chat_app/features/call/screens/call_history_tab.dart';
 import 'package:chat_app/features/group/screens/create_group_screen.dart';
 import 'package:chat_app/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:chat_app/features/status/screens/confirm_status_screen.dart';
@@ -125,7 +126,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           children: const [
             ContactsList(),
             StatusContactsScreen(),
-            Text('Calls')
+            CallHistoryTab()
           ],
         ),
         floatingActionButton: FloatingActionButton(

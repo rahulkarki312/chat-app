@@ -1,6 +1,7 @@
 import 'package:chat_app/features/call/controller/call_controller.dart';
 import 'package:chat_app/models/call.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +9,9 @@ import 'call_screen.dart';
 
 class CallPickupScreen extends ConsumerWidget {
   final Widget scaffold;
-  const CallPickupScreen({super.key, required this.scaffold});
+  final bool isGroupChat;
+  const CallPickupScreen(
+      {super.key, required this.scaffold, required this.isGroupChat});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +51,13 @@ class CallPickupScreen extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  ref.read(callControllerProvider).endCall(
+                                      call.callerId,
+                                      call.receiverId,
+                                      context,
+                                      isGroupChat);
+                                },
                                 icon: const Icon(
                                   Icons.call_end,
                                   color: Colors.redAccent,

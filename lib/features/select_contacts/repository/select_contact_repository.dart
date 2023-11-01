@@ -39,12 +39,14 @@ class SelectContactRepository {
         String selectedPhoneNum =
             selectedContact.phones[0].number.replaceAll(RegExp('[-, ]'), '');
         print(selectedPhoneNum);
+        print(userData.phoneNumber);
 
         if (selectedPhoneNum == userData.phoneNumber) {
           isFound = true;
           if (context.mounted) {
             Navigator.pushNamed(context, MobileChatScreen.routeName,
                 arguments: {'name': userData.name, 'uid': userData.uid});
+            return;
           }
         }
       }

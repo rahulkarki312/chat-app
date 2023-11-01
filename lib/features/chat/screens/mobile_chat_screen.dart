@@ -31,6 +31,7 @@ class MobileChatScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CallPickupScreen(
+      isGroupChat: isGroupChat,
       scaffold: Scaffold(
         appBar: AppBar(
           backgroundColor: appBarColor,
