@@ -54,7 +54,7 @@ class CallHistoryTab extends ConsumerWidget {
                       trailing:
                           Text(DateFormat.yMEd().format(callHistory.callDate)),
                       leading: CircleAvatar(
-                          radius: 45,
+                          // radius: 45,
                           backgroundImage: NetworkImage(profilePic))),
                 );
               });

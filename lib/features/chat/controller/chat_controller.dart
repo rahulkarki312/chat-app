@@ -38,6 +38,14 @@ class ChatController {
     return chatRepository.getGroupChatStream(groupId);
   }
 
+  Future<List<ChatContact>> getChatContactsAsFuture() {
+    return chatRepository.getChatContactsAsFuture();
+  }
+
+  Future<List<model.Group>> getGroupsAsFuture() {
+    return chatRepository.getGroupsAsFuture();
+  }
+
   void sendTextMessage(BuildContext context, String text, String receiverUserId,
       bool isGroupChat) {
     final messageReply = ref.read(messageReplyProvider);

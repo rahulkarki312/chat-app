@@ -52,6 +52,7 @@ class ChatRepository {
       return contacts;
     });
   }
+
 // fetching chatMessages using stream
 
   Stream<List<Message>> getChatStream(String receiverUserId) {
@@ -104,6 +105,36 @@ class ChatRepository {
       }
       return messages;
     });
+  }
+
+// searching chat contacts/groups
+
+// fetching the chatContacts as a Future (used for search field)
+  Future<List<ChatContact>> getChatContactsAsFuture() async {
+    List<ChatContact> chatContacts = [];
+    final snapshots = await firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .get();
+    for (var doc in snapshots.docs) {
+      chatContacts.add(ChatContact.fromMap(doc.data()));
+    }
+    return chatContacts;
+  }
+
+  // fetching the chatGroups as a Future  (Also for search field)
+  Future<List<model.Group>> getGroupsAsFuture() async {
+    final snapshots = await firestore.collection('groups').get();
+    List<model.Group> groups = [];
+
+    for (var document in snapshots.docs) {
+      var group = model.Group.fromMap(document.data());
+      if (group.membersUid.contains(auth.currentUser!.uid)) {
+        groups.add(group);
+      }
+    }
+    return groups;
   }
 
   Future<void> _saveDataToContactsSubcollection(
