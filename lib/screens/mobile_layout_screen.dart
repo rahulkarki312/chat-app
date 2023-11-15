@@ -4,6 +4,7 @@ import 'package:chat_app/common/utils/utils.dart';
 import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import 'package:chat_app/features/call/screens/call_history_tab.dart';
 import 'package:chat_app/features/delegates/search_contacts_delegate.dart';
+import 'package:chat_app/features/edit/screens/edit_info_screen.dart';
 
 import 'package:chat_app/features/group/screens/create_group_screen.dart';
 import 'package:chat_app/features/select_contacts/screens/select_contacts_screen.dart';
@@ -14,21 +15,6 @@ import '../colors.dart';
 import '../features/chat/widgets/contacts_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// class MobileLayoutScreen extends ConsumerStatefulWidget {
-//   const MobileLayoutScreen({super.key});
-
-//   @override
-//   ConsumerState<ConsumerStatefulWidget> createState() => MobileLayoutScreenState();
-// }
-
-// class MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
-
 class MobileLayoutScreen extends ConsumerStatefulWidget {
   const MobileLayoutScreen({Key? key}) : super(key: key);
 
@@ -38,11 +24,12 @@ class MobileLayoutScreen extends ConsumerStatefulWidget {
 
 class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-  late TabController tabBarController;
+  int currentPageIndex = 0;
+  // late TabController tabBarController;
   @override
   void initState() {
     super.initState();
-    tabBarController = TabController(length: 3, vsync: this);
+    // tabBarController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -68,91 +55,77 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: appBarColor,
-          centerTitle: false,
-          title: const Text(
-            'ChatApp',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.grey,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search, color: Colors.grey),
-              onPressed: () {
-                showSearch(
-                    context: context, delegate: SearchContactsDelegate(ref));
-              },
-            ),
-            PopupMenuButton(
-                icon: const Icon(
-                  Icons.more_vert,
-                  color: Colors.grey,
-                ),
-                itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: const Text('Create A Group'),
-                        onTap: () => Future(() => Navigator.pushNamed(
-                            context, CreateGroupScreen.routeName)),
-                      )
-                    ]),
-          ],
-          bottom: TabBar(
-            controller: tabBarController,
-            indicatorColor: tabColor,
-            indicatorWeight: 4,
-            labelColor: tabColor,
-            unselectedLabelColor: Colors.grey,
-            labelStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-            tabs: const [
-              Tab(
-                text: 'CHATS',
-              ),
-              Tab(
-                text: 'STATUS',
-              ),
-              Tab(
-                text: 'CALLS',
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          controller: tabBarController,
-          children: const [
-            ContactsList(),
-            StatusContactsScreen(),
-            CallHistoryTab()
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            if (tabBarController.index == 0) {
-              Navigator.pushNamed(context, SelectContactsScreen.routeName);
-            } else {
-              File? pickedImage = await pickImageFromGallery(context);
-              if (pickedImage != null && context.mounted) {
-                Navigator.pushNamed(context, ConfirmStatusScreen.routeName,
-                    arguments: pickedImage);
-              }
-            }
+    return Scaffold(
+      bottomNavigationBar: NavigationBar(
+          height: 60,
+          indicatorShape: const CircleBorder(),
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          indicatorColor: purple,
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
           },
-          backgroundColor: tabColor,
-          child: const Icon(
-            Icons.more_horiz,
-            color: Colors.white,
-          ),
-        ),
-      ),
+          selectedIndex: currentPageIndex,
+          destinations: const [
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              icon: Icon(Icons.home_outlined),
+              label: 'Contacts ',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.photo,
+                color: Colors.white,
+              ),
+              icon: Icon(Icons.photo_outlined),
+              label: 'Stories',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.phone,
+                color: Colors.white,
+              ),
+              icon: Icon(Icons.phone_outlined),
+              label: 'Call History',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.person,
+                color: Colors.white,
+              ),
+              icon: Icon(Icons.person_outlined),
+              label: 'Edit Info',
+            ),
+          ]),
+      body: const <Widget>[
+        ContactsList(),
+        StatusContactsScreen(),
+        CallHistoryTab(),
+        EditInfoScreen(),
+      ][currentPageIndex],
+      floatingActionButton: currentPageIndex == 2 || currentPageIndex == 3
+          ? null
+          : FloatingActionButton(
+              backgroundColor: appBarColor,
+              child: Icon(
+                currentPageIndex == 0 ? Icons.add : Icons.add_photo_alternate,
+                color: Colors.white,
+              ),
+              onPressed: () async {
+                if (currentPageIndex == 0) {
+                  Navigator.pushNamed(context, SelectContactsScreen.routeName);
+                } else {
+                  File? pickedImage = await pickImageFromGallery(context);
+                  if (pickedImage != null && context.mounted) {
+                    Navigator.pushNamed(context, ConfirmStatusScreen.routeName,
+                        arguments: pickedImage);
+                  }
+                }
+              }),
     );
   }
 }

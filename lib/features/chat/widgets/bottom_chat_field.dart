@@ -233,7 +233,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             Padding(
               padding: EdgeInsets.only(bottom: 8, right: 2, left: 2),
               child: CircleAvatar(
-                  backgroundColor: const Color(0xFF128C7E),
+                  backgroundColor: green,
                   radius: 23,
                   child: GestureDetector(
                     onTap: sendTextMessage,

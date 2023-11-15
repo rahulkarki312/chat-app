@@ -41,19 +41,16 @@ class _SelectContactsGroupState extends ConsumerState<SelectContactsGroup> {
                     final contact = contactsList[index];
                     return InkWell(
                       onTap: () => selectContact(index, contact),
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: ListTile(
-                            leading: selectedContactsIndex.contains(index)
-                                ? IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.done))
-                                : null,
-                            title: Text(
-                              contact.displayName,
-                              style: const TextStyle(fontSize: 18),
-                            )),
-                      ),
+                      child: ListTile(
+                          leading: selectedContactsIndex.contains(index)
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.done))
+                              : null,
+                          title: Text(
+                            contact.displayName,
+                            style: const TextStyle(fontSize: 18),
+                          )),
                     );
                   }),
             ),

@@ -53,4 +53,9 @@ class AuthController {
   void setUserState(bool isOnline) {
     authRepository.setUserState(isOnline);
   }
+
+  void updateUserInfo(BuildContext context, String name, File? profilePic) {
+    authRepository.updateUserInfo(
+        name: name, profilePic: profilePic, ref: ref, context: context);
+  }
 }

@@ -4,6 +4,7 @@ import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import 'package:chat_app/features/landing/screens/landing_screen.dart';
 import 'package:chat_app/firebase_options.dart';
 import 'package:chat_app/screens/mobile_layout_screen.dart';
+import 'package:chat_app/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,9 +42,9 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'chatApp UI',
-        theme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: backgroundColor,
-            appBarTheme: const AppBarTheme(color: appBarColor)),
+        themeMode: ref.watch(themeProvider).themeMode as ThemeMode,
+        theme: Themes.lightTheme,
+        darkTheme: Themes.darkTheme,
         onGenerateRoute: (settings) => generateRoute(settings),
         home: ref.watch(userDataAuthProvider).when(
             data: ((user) {

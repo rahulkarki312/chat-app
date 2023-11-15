@@ -87,7 +87,7 @@ class MyMessageCard extends StatelessWidget {
                         date,
                         style: const TextStyle(
                           fontSize: 13,
-                          color: Colors.white60,
+                          color: greyColor,
                         ),
                       ),
                       const SizedBox(
@@ -96,7 +96,7 @@ class MyMessageCard extends StatelessWidget {
                       Icon(
                         isSeen ? Icons.done_all : Icons.done,
                         size: 20,
-                        color: isSeen ? Colors.blue : Colors.white60,
+                        color: isSeen ? Colors.blue : greyColor,
                       ),
                     ],
                   ),
