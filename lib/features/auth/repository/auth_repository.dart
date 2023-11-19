@@ -2,6 +2,7 @@ import 'package:chat_app/common/repository/common_firebase_storage_repository.da
 import 'package:chat_app/common/utils/utils.dart';
 import 'package:chat_app/features/auth/screens/otp_screen.dart';
 import 'package:chat_app/features/auth/screens/user_information_screen.dart';
+import 'package:chat_app/models/status_model.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/screens/mobile_layout_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -93,11 +94,13 @@ class AuthRepository {
           groupId: []);
 
       firestore.collection('users').doc(uid).set(user
-          .toMap()); // stores the user info to firebase's firestore database inside 'users' collection under 'uid
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const MobileLayoutScreen()),
-          (route) => false);
+          .toMap()); // stores the user info to firebase's firestore database inside 'users' collection under 'uid'
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const MobileLayoutScreen()),
+            (route) => false);
+      }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -118,5 +121,74 @@ class AuthRepository {
         .collection('users')
         .doc(auth.currentUser!.uid)
         .update({'isOnline': isOnline});
+  }
+
+  void updateUserInfo(
+      {required String name,
+      required File? profilePic,
+      required ProviderRef ref,
+      required BuildContext context}) async {
+    String uid = auth.currentUser!.uid;
+    String? photoUrl;
+    if (profilePic != null) {
+      photoUrl = await ref
+          .read(CommonFirebaseStorageRepositoryProvider)
+          .storeFileToFirebase('profilePic/$uid', profilePic);
+    }
+
+    if (profilePic == null) {
+      // only update the name if no pic is selected (same old photo used)
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .update({'name': name});
+    } else {
+      // update both the name and pic of the user
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .update({'name': name, 'profilePic': photoUrl});
+    }
+
+    // update status to change the user's info in database
+    final statusSnapshot =
+        await firestore.collection('status').where('uid', isEqualTo: uid).get();
+    if (statusSnapshot.docs.isNotEmpty) {
+      await firestore
+          .collection('status')
+          .doc(statusSnapshot.docs[0].id)
+          .update({'username': name, 'profilePic': photoUrl});
+    }
+
+    // update CallHistory to update the username and profilePic
+
+    //if the currentUser had made the call (update senderUserData)
+    final senderDataSnapshots = await firestore
+        .collection('callHistory')
+        .where('senderUserId', isEqualTo: uid)
+        .get();
+    if (senderDataSnapshots.docs.isNotEmpty) {
+      for (var doc in senderDataSnapshots.docs) {
+        await firestore
+            .collection('callHistory')
+            .doc(doc.id)
+            .update({'senderUserName': name, 'senderProfilePic': photoUrl});
+      }
+    }
+
+    //if the currentUser had received the call (update receiverUserData)
+    final receiverDataSnapshots = await firestore
+        .collection('callHistory')
+        .where('receiverUserId', isEqualTo: uid)
+        .get();
+
+    if (receiverDataSnapshots.docs.isNotEmpty) {
+      for (var doc in receiverDataSnapshots.docs) {
+        await firestore
+            .collection('callHistory')
+            .doc(doc.id)
+            .update({'receiverUserName': name, 'receiverProfilePic': photoUrl});
+      }
+    }
   }
 }

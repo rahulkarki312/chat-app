@@ -49,6 +49,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   }
 
   void sendTextMessage() async {
+    if (_messageController.text == '') {
+      return;
+    }
     if (isShowSendButton) {
       ref.read(ChatControllerProvider).sendTextMessage(
           context,
@@ -231,9 +234,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 8, right: 2, left: 2),
+              padding: const EdgeInsets.only(bottom: 8, right: 2, left: 2),
               child: CircleAvatar(
-                  backgroundColor: const Color(0xFF128C7E),
+                  backgroundColor: green,
                   radius: 23,
                   child: GestureDetector(
                     onTap: sendTextMessage,

@@ -46,29 +46,56 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Group')),
+      appBar: AppBar(
+        title: const Text('Create Group'),
+        backgroundColor: appBarColor,
+      ),
       body: Center(
           child: Column(
         children: [
-          const SizedBox(height: 10),
           Stack(
             children: [
               image == null
-                  ? const CircleAvatar(
-                      radius: 64,
-                      backgroundImage: NetworkImage(
-                          'https://www.nswtreeworks.com.au/wp-content/uploads/2017/04/dummy_person.png'),
+                  ? const SizedBox(
+                      height: 200,
+                      child: CircleAvatar(
+                        radius: 72,
+                        backgroundColor: purple,
+                        child: CircleAvatar(
+                          radius: 68,
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                              radius: 64,
+                              backgroundImage: NetworkImage(
+                                'https://static.vecteezy.com/system/resources/previews/000/550/535/non_2x/user-icon-vector.jpg',
+                              )),
+                        ),
+                      ),
                     )
-                  : CircleAvatar(
-                      backgroundImage: FileImage(image!),
-                      radius: 64,
+                  : SizedBox(
+                      height: 200,
+                      child: CircleAvatar(
+                        radius: 72,
+                        backgroundColor: purple,
+                        child: CircleAvatar(
+                          radius: 68,
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 64,
+                            backgroundImage: FileImage(image!),
+                          ),
+                        ),
+                      ),
                     ),
               Positioned(
-                bottom: -10,
+                bottom: 15,
                 left: 80,
-                child: IconButton(
-                    onPressed: selectImage,
-                    icon: const Icon(Icons.add_a_photo)),
+                child: Card(
+                  shape: const CircleBorder(),
+                  child: IconButton(
+                      onPressed: selectImage,
+                      icon: const Icon(Icons.add_a_photo)),
+                ),
               )
             ],
           ),
@@ -92,7 +119,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
       )),
       floatingActionButton: FloatingActionButton(
         onPressed: createGroup,
-        backgroundColor: tabColor,
+        backgroundColor: appBarColor,
         child: const Icon(
           Icons.done,
           color: Colors.white,

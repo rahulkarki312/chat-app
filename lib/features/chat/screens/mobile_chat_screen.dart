@@ -47,7 +47,17 @@ class MobileChatScreen extends ConsumerWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(name),
+                        Row(
+                          children: [
+                            Text('$name '),
+                            snapshot.data!.isOnline
+                                ? const CircleAvatar(
+                                    backgroundColor: Colors.green,
+                                    radius: 7,
+                                  )
+                                : const Text('')
+                          ],
+                        ),
                         Text(
                           snapshot.data!.isOnline ? 'online' : 'offline',
                           style: const TextStyle(
@@ -64,12 +74,8 @@ class MobileChatScreen extends ConsumerWidget {
               icon: const Icon(Icons.video_call),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () => makeCall(ref, context),
               icon: const Icon(Icons.call),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
             ),
           ],
         ),

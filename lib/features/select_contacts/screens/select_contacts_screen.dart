@@ -1,6 +1,8 @@
+import 'package:chat_app/colors.dart';
 import 'package:chat_app/common/widgets/error.dart';
 import 'package:chat_app/common/widgets/loader.dart';
 import 'package:chat_app/features/select_contacts/controller/select_contact_controller.dart';
+import 'package:chat_app/features/select_contacts/delegates/search_mobile_contacts_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_contacts/contact.dart';
@@ -19,10 +21,17 @@ class SelectContactsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Contact'), actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
-      ]),
+      appBar: AppBar(
+          backgroundColor: appBarColor,
+          title: const Text('Select Contact'),
+          actions: [
+            IconButton(
+                constraints: const BoxConstraints(minWidth: 100),
+                onPressed: () => showSearch(
+                    context: context,
+                    delegate: SearchMobileContactsDelegate(ref)),
+                icon: const Icon(Icons.search)),
+          ]),
       body: ref.watch(getContactsProvider).when(
           data: (contactsList) => ListView.builder(
               itemCount: contactsList.length,
@@ -30,19 +39,21 @@ class SelectContactsScreen extends ConsumerWidget {
                 final contact = contactsList[index];
                 return InkWell(
                   onTap: () => selectContact(ref, contact, context),
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 8),
-                    child: ListTile(
-                        title: Text(
-                          contact.displayName,
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        leading: contact.photo == null
-                            ? null
-                            : CircleAvatar(
-                                backgroundImage: MemoryImage(contact.photo!),
-                                radius: 30,
-                              )),
+                  child: Column(
+                    children: [
+                      ListTile(
+                          title: Text(
+                            contact.displayName,
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          leading: contact.photo == null
+                              ? null
+                              : CircleAvatar(
+                                  backgroundImage: MemoryImage(contact.photo!),
+                                  radius: 30,
+                                )),
+                      const Divider(thickness: 2)
+                    ],
                   ),
                 );
               }),

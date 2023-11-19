@@ -34,6 +34,7 @@ class SenderMessageCard extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: ConstrainedBox(
           constraints: BoxConstraints(
+            minWidth: 105,
             maxWidth: MediaQuery.of(context).size.width - 45,
           ),
           child: Card(
