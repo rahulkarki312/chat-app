@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:chat_app/colors.dart';
 import 'package:chat_app/common/widgets/loader.dart';
 import 'package:chat_app/features/status/controller/status_controller.dart';
 import 'package:chat_app/features/status/screens/status_screen.dart';
@@ -25,14 +24,7 @@ class StatusContactsScreen extends ConsumerWidget {
             style: TextStyle(fontSize: 40),
           ),
         ),
-        const Row(
-          children: [
-            Text('  See What Others Are Up To',
-                style: TextStyle(fontSize: 18, color: greyColor)),
-            Expanded(child: Divider()),
-          ],
-        ),
-        const SizedBox(height: 25),
+        const Divider(),
         FutureBuilder<List<Status>>(
           future: ref.read(statusControllerProvider).getStatus(context),
           builder: (context, snapshot) {

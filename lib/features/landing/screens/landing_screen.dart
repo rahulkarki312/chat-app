@@ -14,7 +14,6 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

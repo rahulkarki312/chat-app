@@ -52,9 +52,10 @@ class _EditInfoScreenState extends ConsumerState<EditInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 30),
+        const SizedBox(height: 55),
         const Text(
           ' Edit Your Profile',
           style: TextStyle(fontSize: 40),

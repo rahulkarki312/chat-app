@@ -37,7 +37,6 @@ class SearchContactsDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     return ListView(
       children: [
-        // build results/suggestion for group chat
         FutureBuilder(
           future: ref.read(ChatControllerProvider).getGroupsAsFuture(),
           builder: (context, snapshot) {
@@ -79,7 +78,6 @@ class SearchContactsDelegate extends SearchDelegate {
             }
           },
         ),
-        // build results/suggestion for chat
         FutureBuilder(
           future: ref.read(ChatControllerProvider).getChatContactsAsFuture(),
           builder: (context, snapshot) {

@@ -38,8 +38,8 @@ class SelectContactRepository {
         // to replace the blank spaces and hyphens - in the phone num with no space
         String selectedPhoneNum =
             selectedContact.phones[0].number.replaceAll(RegExp('[-, ]'), '');
-        // print(selectedPhoneNum);
-        // print(userData.phoneNumber);
+        print(selectedPhoneNum);
+        print(userData.phoneNumber);
 
         if (selectedPhoneNum == userData.phoneNumber) {
           isFound = true;

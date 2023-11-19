@@ -35,10 +35,10 @@ class ContactsList extends ConsumerWidget {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
+                          width: MediaQuery.of(context).size.width * 0.15,
                         ),
                         const Text(
-                          'Search Contacts   ',
+                          'Search Contacts    ',
                           style: TextStyle(fontSize: 20, color: greyColor),
                         ),
                         const Icon(Icons.search, color: greyColor),
@@ -51,7 +51,7 @@ class ContactsList extends ConsumerWidget {
                     },
                   ),
                 ),
-                const SizedBox(width: 30),
+                const SizedBox(width: 20),
                 PopupMenuButton(
                     icon: const Icon(
                       Icons.more_vert,
